@@ -7,11 +7,14 @@ const app = new Koa();
 app.use(async function(ctx, next) {
   await next();
   ctx.set('X-Custom', 'Dub Dub Dub App');
+  // ctx.body = 'Hello World';
 });
 
 app.use(async function(ctx, next) {
   await next();
-  if ('/' != ctx.url) return;
+  // console.log(ctx.url);
+  // if ('/' != ctx.url) return;
+
   ctx.body = 'Hello from www app';
 });
 
