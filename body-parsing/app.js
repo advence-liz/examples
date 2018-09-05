@@ -1,12 +1,14 @@
-
 const Koa = require('koa');
 const koaBody = require('koa-body');
+const logger = require('koa-logger');
+const app = (module.exports = new Koa());
 
-const app = module.exports = new Koa();
-
-app.use(koaBody({
-  jsonLimit: '1kb'
-}));
+app.use(logger());
+app.use(
+  koaBody({
+    jsonLimit: '1kb'
+  })
+);
 
 // POST .name to /uppercase
 // co-body accepts application/json
