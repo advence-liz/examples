@@ -11,7 +11,7 @@ async function responseTime(ctx, next) {
 async function index(ctx, next) {
   await next();
   // if ('/' != ctx.url) return;
-  ctx.body = 'Howzit? From bar middleware bundle';
+  ctx.body = 'Howzit? From bar middleware bundle d';
 }
 
 module.exports = [

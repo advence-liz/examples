@@ -12,10 +12,10 @@ app.use(async function(ctx, next) {
 
 app.use(async function(ctx, next) {
   await next();
-  // console.log(ctx.url);
+  console.log(ctx.url);
   // if ('/' != ctx.url) return;
 
-  ctx.body = 'Hello from www app';
+  ctx.body = 'Hello from http://example.com/';
 });
 
 module.exports = app;
