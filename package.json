@@ -17,6 +17,7 @@
     "koa-session": "^5.0.0",
     "koa-static": "^3.0.0",
     "koa-views": "^6.0.2",
+    "react": "^16.6.0",
     "streaming-json-stringify": "^3.1.0",
     "swig": "^1.4.2"
   },
