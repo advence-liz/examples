@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "nodemon",
       "runtimeExecutable": "nodemon",
-      "program": "${workspaceFolder}/hello-world/app.js",
+      "program": "${file}",
       "restart": true,
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
