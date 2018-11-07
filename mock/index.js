@@ -1,51 +1,17 @@
 const jsonServer = require('json-server')
 const server = jsonServer.create()
-// const router = jsonServer.router(require('./src/index'));
-// const testRouter = jsonServer.router('test.json');
-const { green, blue } = require('chalk')
-const debug = require('debug')('deer')
-const glob = require('glob')
+
 const middlewares = jsonServer.defaults() // { static: 'public' }
-const path = require('path')
 
+const DeerRouter = require('./middlewares/deer-router')
+const router = new DeerRouter()
 server.use(middlewares)
-/**
- * 传入opts
- * @param {*} opts
- */
-const DeerRouter = function(opts = { root: 'src' }) {
-  if (!(this instanceof DeerRouter)) {
-    return new DeerRouter(opts)
-  }
-  this.isInit = true
-  // 单纯为了跟koa-router 接口一样
-  this.routes = () => (req, res, next) => {
-    const app = req.app
-    let { root } = opts
-    root = root.replace(/\/$/, '')
-    if (this.isInit) {
-      const routeSources = glob.sync(`${root}/**/*.{js,json}`)
-      routeSources.forEach(filePath => {
-        const prefix = filePath
-          .replace(/\.(js|json)$/, '')
-          .replace(/\/index$/, '')
-          .replace(root, '')
-        const routes = require(path.resolve(process.cwd(), filePath))
-        app.use(prefix, jsonServer.router(routes))
 
-        debug(blue('file'), green(path.resolve(process.cwd(), filePath)))
-        for (let key in routes) {
-          debug(blue(`${prefix}/${key}`))
-        }
-      })
+server.use(router.routes())
 
-      this.isInit = false
-    }
-    next()
-  }
-}
-
-server.use(new DeerRouter().routes())
+server.listen(3000, () => {
+  console.log('JSON Server is running')
+})
 
 /**
  * 这样搞只有第一个生效
@@ -67,6 +33,3 @@ server.use(new DeerRouter().routes())
  * 可以整合多个文件的初步方案
  */
 // server.use(jsonServer.router(require('./src/index')))
-server.listen(3000, () => {
-  console.log('JSON Server is running')
-})
