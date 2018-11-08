@@ -15,7 +15,7 @@ let $IsInit = true
  * port app 端口号
  * publicPath 生成首页的路径
  */
-class DeerRouter {
+class JsonServerRouter {
   constructor(opts = {}) {
     this.opts = {
       ...{ root: 'src', port: 3000, publicPath: 'public' },
@@ -39,15 +39,20 @@ class DeerRouter {
         .replace(/\.(js|json)$/, '')
         .replace(/\/index$/, '')
         .replace(root, '')
-      // 一个文件代表多个路由所以命名为routes
+      /**
+       * @var {Object} routes josn-server 路由对象
+       */
       const routes = require(path.resolve(process.cwd(), filePath))
       this.routeStore.push(new PartRouter(routes, prefix))
       logDebugInfo(filePath, routes, prefix)
-      templateStore.push(new PartTemplate(routes, prefix, port).render())
+      templateStore.push(
+        new PartTemplate(routes, prefix, port, filePath).render()
+      )
     })
 
     publicPath && createTemlate(templateStore, publicPath)
-    publicPath && console.info(green(`❤️  visit `), blue(`http://localhost:${port}/`))
+    publicPath &&
+      console.info(green(`❤️  visit `), blue(`http://localhost:${port}/`))
     publicPath && opn(`http://localhost:${port}/`)
   }
   // 单纯为了跟koa-router 接口一样
@@ -56,7 +61,7 @@ class DeerRouter {
       const app = req.app
       if ($IsInit) {
         this.routeStore.forEach(partRouter => {
-          partRouter.routes(app)
+          partRouter.getRoutes(app)
         })
 
         $IsInit = false
@@ -72,12 +77,14 @@ function logDebugInfo(filePath, routes, prefix) {
   }
 }
 function PartRouter(routes, prefix) {
-  this.routes = app => app.use(prefix, jsonServer.router(routes))
+  this.getRoutes = app => app.use(prefix, jsonServer.router(routes))
 }
-function PartTemplate(routes, prefix, port) {
+function PartTemplate(routes, prefix, port, filePath) {
   const arr = []
   this.render = () => {
-    arr.push(` <h3 class="bg-primary">${prefix}</h3>`)
+    arr.push(
+      ` <h3 class="bg-primary">${prefix} <span class="glyphicon glyphicon-file" aria-hidden="true"></span> <span class="h6" >${filePath}</span></h3>`
+    )
     arr.push(`<ul>`)
     for (let key in routes) {
       arr.push(
@@ -95,4 +102,4 @@ function createTemlate(templateStore, publicPath) {
     _.template(_template)({ body: templateStore.join('\n') })
   )
 }
-module.exports = DeerRouter
+module.exports = JsonServerRouter
