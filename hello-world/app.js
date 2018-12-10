@@ -1,40 +1,20 @@
-const Koa = require('koa');
-const app = (module.exports = new Koa());
+var koa = require('koa')
+var app = (module.exports = koa())
 
-const one = (ctx, next) => {
-  console.log('>> one');
-  next();
-  console.log('<< one');
-};
+app.use(function*() {
+  this.body = 'Hello World'
+})
 
-const two = async (ctx, next) => {
-  console.log('>> two');
-  await next();
-  console.log('<< two');
-};
+if (!module.parent) app.listen(3000)
 
-const three = async (ctx, next) => {
-  console.log('>> three');
-  next();
-  console.log('<< three');
-};
+// 以下是一个无作用的 Koa 应用程序被绑定到 3000 端口：
 
-app.use(one);
-app.use(two);
-app.use(three);
+// const Koa = require('koa');
+// const app = new Koa();
+// app.listen(3000);
+// 这里的 app.listen(...) 方法只是以下方法的语法糖:
 
-app.use(async function(ctx) {
-  ctx.body = 'liz';
-  console.log('liz');
-});
-
-if (!module.parent) app.listen(3001);
-
-// << one
-// >> one
-// >> two
-// >> three
-// liz
-// << three
-// << two
-// << one
+// const http = require('http');
+// const Koa = require('koa');
+// const app = new Koa();
+// http.createServer(app.callback()).listen(3000);
