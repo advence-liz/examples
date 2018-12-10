@@ -75,3 +75,5 @@ test/images/originalSideways.jpg.2
 ##################
 out/*
 .qsrc.json
+session
+

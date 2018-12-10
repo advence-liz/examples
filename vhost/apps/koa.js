@@ -1,21 +1,21 @@
-const Koa = require('koa');
+const Koa = require('koa')
 
 // koa app
 
-const app = new Koa();
+const app = new Koa()
 
 app.use(async function(ctx, next) {
-  await next();
-  ctx.set('X-Custom', 'Dub Dub Dub App');
+  await next()
+  ctx.set('X-Custom', 'Dub Dub Dub App')
   // ctx.body = 'Hello World';
-});
+})
 
 app.use(async function(ctx, next) {
-  await next();
-  console.log(ctx.url);
+  await next()
+  console.log(ctx.url)
   // if ('/' != ctx.url) return;
 
-  ctx.body = 'Hello from http://example.com/';
-});
+  ctx.body = `Hello from ${ctx.url}`
+})
 
-module.exports = app;
+module.exports = app
